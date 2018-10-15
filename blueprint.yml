@@ -19,7 +19,7 @@ image:
   name: "cloudless-example-base-image-v0"
 
 initialization:
-  - path: "setup_vault.sh"
+  - path: "setup_consul.sh"
     vars:
       cloudless_test_framework_ssh_key:
         required: false

@@ -39,7 +39,7 @@ class BlueprintTest(BlueprintTestInterface):
         Given the network name and the service name of the service under test,
         verify that it's behaving as expected.
         """
-        def check_vault_setup():
+        def check_consul_setup():
             public_ips = [i.public_ip for s in service.subnetworks for i in s.instances]
             assert public_ips, "No services are running..."
             for public_ip in public_ips:
@@ -56,4 +56,4 @@ class BlueprintTest(BlueprintTestInterface):
                 logged_in_client.delete('secret/foo')
                 assert "baz" in my_secret["data"], "Baz not in my_secret: %s" % my_secret
                 assert my_secret["data"]["baz"] == "bar", "Baz not 'bar': %s" % my_secret
-        call_with_retries(check_vault_setup, RETRY_COUNT, RETRY_DELAY)
+        call_with_retries(check_consul_setup, RETRY_COUNT, RETRY_DELAY)

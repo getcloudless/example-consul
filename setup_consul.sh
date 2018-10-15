@@ -20,38 +20,27 @@ if gpg --fingerprint 0x51852D87348FFC4C | grep "91A6 E7F8 5D05 C656 30BE  F189 5
 fi
 
 # Download the binary and signature files.
-curl -Os https://releases.hashicorp.com/vault/0.11.2/vault_0.11.2_linux_amd64.zip
-curl -Os https://releases.hashicorp.com/vault/0.11.2/vault_0.11.2_SHA256SUMS
-curl -Os https://releases.hashicorp.com/vault/0.11.2/vault_0.11.2_SHA256SUMS.sig
+curl -Os https://releases.hashicorp.com/consul/1.3.0/consul_1.3.0_linux_amd64.zip
+curl -Os https://releases.hashicorp.com/consul/1.3.0/consul_1.3.0_SHA256SUMS
+curl -Os https://releases.hashicorp.com/consul/1.3.0/consul_1.3.0_SHA256SUMS.sig
 
 # Verify the signature file is untampered.
-gpg --verify vault_0.11.2_SHA256SUMS.sig vault_0.11.2_SHA256SUMS
+gpg --verify consul_1.3.0_SHA256SUMS.sig consul_1.3.0_SHA256SUMS
 
 # Verify the SHASUM matches the binary.
-shasum -a 256 -c vault_0.11.2_SHA256SUMS
+shasum -a 256 -c consul_1.3.0_SHA256SUMS
 
 # Unzip and install the binary
 sudo apt-get -y install unzip
-unzip vault_0.11.2_linux_amd64.zip
-mkdir -p /opt/vault/
-mv vault /opt/vault/vault
+unzip consul_1.3.0_linux_amd64.zip
+mkdir -p /opt/consul/
+mv consul /opt/consul/consul
 
-# Configure Vault
-mkdir -p /etc/vault/
-mkdir -p /var/vault/data/
-cat <<EOF >| /etc/vault/vault.hcl
-storage "file" {
-  path = "/var/vault/data"
-}
+# Create Data Directory
+mkdir -p /var/consul/data/
 
-listener "tcp" {
- address     = "0.0.0.0:8200"
- tls_disable = 1
-}
-EOF
-
-# Start Vault
+# Start consul
 #
 # Ideally this should be installed on the box as a real daemon, but this is an
 # example of how to do everything in a startup script.
-/opt/vault/vault server -config=/etc/vault/vault.hcl &> /var/log/vault.log &
+/opt/consul/consul -server -bootstrap-expect=1 -data-dir=/var/consul/data/ &> /var/log/consul.log &
