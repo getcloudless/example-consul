@@ -43,4 +43,4 @@ mkdir -p /var/consul/data/
 #
 # Ideally this should be installed on the box as a real daemon, but this is an
 # example of how to do everything in a startup script.
-/opt/consul/consul -server -bootstrap-expect=1 -data-dir=/var/consul/data/ &> /var/log/consul.log &
+/opt/consul/consul agent -server -bootstrap-expect=1 -data-dir=/var/consul/data/ -client "0.0.0.0" &> /var/log/consul.log &
