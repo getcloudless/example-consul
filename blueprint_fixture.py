@@ -11,7 +11,7 @@ from cloudless.testutils.fixture import BlueprintTestInterface, SetupInfo
 from cloudless.types.networking import CidrBlock
 
 RETRY_DELAY = float(10.0)
-RETRY_COUNT = int(6)
+RETRY_COUNT = int(10)
 
 class BlueprintTest(BlueprintTestInterface):
     """
