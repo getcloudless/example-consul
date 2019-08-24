@@ -10,6 +10,9 @@ echo "{{ cloudless_test_framework_ssh_key }}" >> /home/{{ cloudless_test_framewo
 # https://urbanautomaton.com/blog/2014/09/09/redirecting-bash-script-output-to-syslog/
 exec 1> >(logger -s -t "$(basename "$0")") 2>&1
 
+# Version of Consul to install
+CONSUL_VERSION="1.5.3"
+
 # Get Hashicorp's GPG Key
 gpg --keyserver keys.gnupg.net --recv-key 0x51852D87348FFC4C
 
@@ -20,19 +23,19 @@ if gpg --fingerprint 0x51852D87348FFC4C | grep "91A6 E7F8 5D05 C656 30BE  F189 5
 fi
 
 # Download the binary and signature files.
-curl -Os https://releases.hashicorp.com/consul/1.3.0/consul_1.3.0_linux_amd64.zip
-curl -Os https://releases.hashicorp.com/consul/1.3.0/consul_1.3.0_SHA256SUMS
-curl -Os https://releases.hashicorp.com/consul/1.3.0/consul_1.3.0_SHA256SUMS.sig
+curl -Os https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip
+curl -Os https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_SHA256SUMS
+curl -Os https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_SHA256SUMS.sig
 
 # Verify the signature file is untampered.
-gpg --verify consul_1.3.0_SHA256SUMS.sig consul_1.3.0_SHA256SUMS
+gpg --verify consul_${CONSUL_VERSION}_SHA256SUMS.sig consul_${CONSUL_VERSION}_SHA256SUMS
 
 # Verify the SHASUM matches the binary.
-shasum -a 256 -c consul_1.3.0_SHA256SUMS
+shasum -a 256 -c consul_${CONSUL_VERSION}_SHA256SUMS
 
 # Unzip and install the binary
 sudo apt-get -y install unzip
-unzip consul_1.3.0_linux_amd64.zip
+unzip consul_${CONSUL_VERSION}_linux_amd64.zip
 mkdir -p /opt/consul/
 mv consul /opt/consul/consul
 
